@@ -44,8 +44,9 @@ uint32_t **matrix_copy(uint32_t **a, uint32_t rows, uint32_t cols)
 
 void fatal(const uint8_t *who, const uint8_t *msg)
 {
-    fprintf(stderr, "[%s] %s", who, msg);
-    exit(1);
+    printf("[%s] %s", who, msg);
+    //fprintf(stderr, "[%s] %s", who, msg);
+    //exit(1);
 }
 
 void swap(uint32_t *a, uint32_t *b)
