@@ -4,13 +4,13 @@
 
 uint32_t main()
 {
-    generate_gf();
+    //generate_gf();
  
     REQUIRE(gf_mul(116, 180) == 96);
     REQUIRE(gf_div(180, 116) == 116);
     REQUIRE(gf_sum(1, 4) == 5);
-    REQUIRE(alpha_of[7] == 128);
-    REQUIRE(gf_mul(alpha_of[250], alpha_of[10]) == 32);
+    //REQUIRE(alpha_of[7] == 128);
+    //REQUIRE(gf_mul(alpha_of[250], alpha_of[10]) == 32);
     REQUIRE(gf_div(116, 192) == 251);
 
 

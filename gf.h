@@ -61,18 +61,32 @@ void generate_gf()
 
 // функция возвращает результат умножения
 // двух полиномов a на b в полях Галуа
-uint32_t gf_mul(uint32_t a, uint32_t b)
+uint32_t gf_mul(uint32_t x, uint32_t y)
 {
-    uint32_t sum;
-    if (a == 0 || b == 0)
-        return 0;
-    if (a < 0 || b < 0)
-        return -1;
-    sum = index_of[a] + index_of[b]; // вычисляем сумму индексов полиномов
-    if (sum >= GFsize - 1)
-        sum -= GFsize - 1; // приводим сумму к модулю GF
-    return alpha_of[sum];  // переводим результат в полиномиальную...
-                           // ...форму и возвращаем результат
+    uint32_t z;
+        int i;
+
+        z = 0;
+        for (i = 0; i < 8; i ++) {
+                z ^= x & -(y & 1);
+                y >>= 1;
+                x <<= 1;
+                x ^= (0x11D & -(x >> 8));
+        }
+        return z;
+}
+
+uint32_t gf_inv(uint32_t x)
+{
+    unsigned z;
+    int i;
+
+    z = x;
+    for (i = 0; i < 6; i ++) {
+            z = gf_mul(z, z);
+            z = gf_mul(z, x);
+    }
+    return gf_mul(z, z);
 }
 
 // функция возвращает результат деления
@@ -81,16 +95,7 @@ uint32_t gf_mul(uint32_t a, uint32_t b)
 // возвращает -1
 uint32_t gf_div(uint32_t a, uint32_t b)
 {
-    int32_t diff;
-    if (a == 0)
-        return 0; // немного оптимизации не повредит
-    if (b == 0)
-        return -1;                    // на ноль делить нельзя!
-    diff = index_of[a] - index_of[b]; // вычисляем разность индексов
-    if (diff < 0)
-        diff += GFsize - 1; // приводим разность к модулю GF
-    return alpha_of[diff];  // переводим результат в полиномиальную...
-                            // ...форму и возвращаем результат
+    return gf_mul(a, gf_inv(b));
 }
 
 uint32_t gf_sum(uint32_t a, uint32_t b)
